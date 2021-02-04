@@ -1,0 +1,12 @@
+
+= AnimalsAPI
+
+== Get All Animals
+.request
+include::C:/Users/891968/CDE_FSE/zoo-api-solution/target/snippets/animals/http-request.adoc[]
+
+.response
+include::C:/Users/891968/CDE_FSE/zoo-api-solution/target/snippets/animals/http-response.adoc[]
+
+
+

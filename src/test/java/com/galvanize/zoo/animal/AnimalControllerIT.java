@@ -1,18 +1,20 @@
 package com.galvanize.zoo.animal;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.zoo.habitat.HabitatEntity;
 import com.galvanize.zoo.habitat.HabitatRepository;
 import com.galvanize.zoo.habitat.HabitatType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import javax.transaction.Transactional;
 import java.util.List;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,6 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@AutoConfigureRestDocs(outputDir = "target/snippets")
+
 class AnimalControllerIT {
 
     @Autowired
@@ -51,7 +55,15 @@ class AnimalControllerIT {
             .andExpect(jsonPath("length()").value(1))
             .andExpect(jsonPath("[0].name").value("monkey"))
             .andExpect(jsonPath("[0].mood").value(Mood.UNHAPPY.name()))
-            .andExpect(jsonPath("[0].type").value(AnimalType.WALKING.name()));
+            .andExpect(jsonPath("[0].type").value(AnimalType.WALKING.name()))
+            .andDo(document("animals",responseFields(
+                    fieldWithPath("[]").description("Array of animals"),
+                    fieldWithPath("[].name").description("Animal Name"),
+                    fieldWithPath("[].mood").description("Animal Mood"),
+                    fieldWithPath("[].habitat").description("Animal Habitat"),
+                    fieldWithPath("[].type").description("Animal Type")
+                    )));
+
     }
 
     @Test
